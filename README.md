@@ -1,25 +1,67 @@
-# Detección de Fracturas Óseas en Radiografías
+# 🦴 Detección de Fracturas Óseas en Radiografías
 
-Asistente clínico que combina detección automática de fracturas (YOLOv8) con un chatbot contextual en español. Permite entrenar modelos con el dataset de `data/raw`, ejecutar inferencia sobre radiografías y resolver dudas mediante una interfaz gráfica basada en Gradio.
+Asistente clínico que combina detección automática de fracturas (YOLOv8) con un chatbot contextual en español. Permite entrenar modelos personalizados, ejecutar inferencia sobre radiografías y resolver dudas mediante una interfaz gráfica basada en Gradio.
 
-## 📦 Requisitos
-- Python 3.10+
-- Dependencias indicadas en `requirements.txt`
-- Dataset con estructura YOLO (ver `data/raw/data.yaml`)
+**📊 Modelo incluido:** 75.4% precisión, 78.6% recall, mAP50 74% (entrenado con 10,119 imágenes)
 
-Instalación rápida:
+## 🚀 Inicio Rápido (Solo Inferencia)
+
+Si solo quieres **usar el modelo entrenado** sin entrenar nuevos modelos:
 
 ```bash
-python -m venv .venv
-.venv\Scripts\activate
+# 1. Clonar repositorio
+git clone https://github.com/MarlonFernandoRuizPalacios/proyecto-ia.git
+cd proyecto-ia
+
+# 2. Instalar dependencias
 pip install -r requirements.txt
+
+# 3. Descargar modelo (Git LFS)
+git lfs pull
+
+# 4. ¡Listo! Ejecutar interfaz
+python main.py
 ```
 
-## 🚀 Ejecución de la interfaz
+La interfaz se abrirá en `http://127.0.0.1:7860`
+
+## 📦 Instalación Completa (con entrenamiento)
+
+Si quieres **entrenar tus propios modelos**:
+
+```bash
+# 1. Crear entorno virtual
+python -m venv .venv
+.venv\Scripts\activate  # Windows
+# source .venv/bin/activate  # Linux/Mac
+
+# 2. Instalar dependencias
+pip install -r requirements.txt
+
+# 3. Descargar modelo pre-entrenado
+git lfs pull
+
+# 4. Preparar dataset (solo si vas a entrenar)
+# Coloca tu dataset en data/raw/ con estructura YOLO:
+#   data/raw/
+#     ├── data.yaml
+#     ├── train/images/ y train/labels/
+#     └── valid/images/ y valid/labels/
+```
+
+## 🎯 Uso de la Interfaz
 
 ```bash
 python main.py
 ```
+
+**Funcionalidades:**
+1. 📸 **Carga de radiografías** (PNG, JPG)
+2. 🔍 **Detección automática** de fracturas
+3. 📊 **Visualización con bounding boxes**
+4. 💾 **Descarga de imagen anotada**
+5. 🤖 **Chatbot médico** para responder dudas
+6. 📝 **Resumen de hallazgos** en español
 
 Esto lanzará la interfaz en `http://127.0.0.1:7860` con:
 1. **Carga de radiografías** y visualización de anotaciones.
@@ -48,29 +90,39 @@ El detector y el chatbot son reutilizados en memoria, por lo que el servicio es 
 - El registro incluye marca de tiempo UTC, imagen origen (si está disponible), resumen y todas las detecciones.
 - Puedes apuntar a otro archivo pasando `logger=InferenceLogger(output_path="otros_logs.jsonl")` al crear `FractureDetector`.
 
-## 🧠 Entrenamiento del detector
+## 🧠 Entrenamiento de Nuevos Modelos
+
+**Requisitos previos:**
+- Dataset en formato YOLO en `data/raw/`
+- GPU NVIDIA recomendada (el código detecta automáticamente CUDA)
+
+### Opción 1: Línea de comandos
+
+```bash
+python scripts/train_detector.py \
+  --data data/raw/data.yaml \
+  --model yolov8m.pt \
+  --epochs 95 \
+  --batch 4 \
+  --imgsz 800 \
+  --device 0
+```
+
+### Opción 2: Python
 
 ```python
 from src.training import TrainingConfig, train_detector
 
 config = TrainingConfig(
     data_yaml="data/raw/data.yaml",
-    model_variant="yolov8s.pt",
-    epochs=75,
-    batch=16,
+    model_variant="yolov8m.pt",
+    epochs=95,
+    batch=4,
 )
 train_detector(config)
 ```
 
-También puedes entrenar desde la línea de comandos:
-
-> Ejecuta estos scripts desde la raíz del repositorio (tras activar tu entorno virtual).
-
-```bash
-python scripts/train_detector.py --data data/raw/data.yaml --model yolov8s.pt --epochs 75 --batch 16
-```
-
-El mejor modelo se guardará en `models/fracture_detector.pt`, que es el archivo cargado por el módulo de inferencia.
+El mejor modelo se guardará automáticamente en `models/fracture_detector.pt`.
 
 ### Notebook estilo Colab (VS Code)
 
