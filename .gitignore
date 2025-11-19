@@ -46,13 +46,15 @@ data/bone*/
 # Modelos entrenados - NO SUBIR (archivos grandes)
 models/cnn/
 runs/
-*.pt
 *.pth
 *.onnx
 *.engine
 weights/
 best.pt
 last.pt
+
+# Excepción: modelo de producción (subir con Git LFS)
+!models/fracture_detector.pt
 
 # Notebooks temporales
 notebooks/runs/
