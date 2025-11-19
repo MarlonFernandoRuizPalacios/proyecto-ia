@@ -43,6 +43,10 @@ data/Fracatlas/
 data/archive*
 data/bone*/
 
+# Directorios adicionales con datasets
+bone-fracture-detection/
+configs/
+
 # Modelos entrenados - NO SUBIR (archivos grandes)
 models/cnn/
 runs/
@@ -56,8 +60,13 @@ last.pt
 # Excepción: modelo de producción (subir con Git LFS)
 !models/fracture_detector.pt
 
+# Modelos YOLO pre-entrenados (se descargan automáticamente)
+yolo*.pt
+yolo11*.pt
+
 # Notebooks temporales
 notebooks/runs/
+notebooks/*.pt
 
 # Logs
 logs/

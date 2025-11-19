@@ -4,6 +4,8 @@ Asistente clínico que combina detección automática de fracturas (YOLOv8) con 
 
 **📊 Modelo incluido:** 75.4% precisión, 78.6% recall, mAP50 74% (entrenado con 10,119 imágenes)
 
+**📖 [Ver Guía de Inicio Rápido](QUICKSTART.md)** | **🔧 [Verificar Instalación](verify_installation.py)**
+
 ## 🚀 Inicio Rápido (Solo Inferencia)
 
 Si solo quieres **usar el modelo entrenado** sin entrenar nuevos modelos:
